@@ -1,0 +1,9 @@
+{
+	"name": "adftrt",
+	"location": "eastus2",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "eb8cc784-bb99-44d7-93e9-0bcca1e9c495",
+		"tenantId": "ad587ddc-dc55-4037-88c7-5753ab6f826e"
+	}
+}

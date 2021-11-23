@@ -1,0 +1,45 @@
+{
+	"name": "dataflow2",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "AzureSqlTable4",
+						"type": "DatasetReference"
+					},
+					"name": "source1"
+				},
+				{
+					"dataset": {
+						"referenceName": "Excel1",
+						"type": "DatasetReference"
+					},
+					"name": "source2"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "surrogatekey",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				}
+			],
+			"transformations": [
+				{
+					"name": "Join1"
+				},
+				{
+					"name": "SurrogateKey1"
+				},
+				{
+					"name": "DerivedColumn1"
+				}
+			],
+			"script": "source(output(\n\t\tmaxid as integer\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tquery: 'select max(sno) as maxid from emp',\n\tformat: 'query') ~> source1\nsource(output(\n\t\tColumn_1 as string,\n\t\tColumn_2 as string,\n\t\tColumn_3 as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> source2\nsource1, source2 join(1 == 1,\n\tjoinType:'cross',\n\tbroadcast: 'auto')~> Join1\nJoin1 keyGenerate(output(SurrogateKey as long),\n\tstartAt: 1L) ~> SurrogateKey1\nSurrogateKey1 derive(key = toInteger(maxid+SurrogateKey)) ~> DerivedColumn1\nDerivedColumn1 sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tinput(\n\t\tsno as integer,\n\t\teid as integer,\n\t\tename as string,\n\t\tesal as integer\n\t),\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:false,\n\tupsertable:false,\n\tformat: 'table',\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\terrorHandlingOption: 'stopOnFirstError',\n\tmapColumn(\n\t\tsno = key,\n\t\teach(match(type=='string'))\n\t)) ~> sink1"
+		}
+	}
+}

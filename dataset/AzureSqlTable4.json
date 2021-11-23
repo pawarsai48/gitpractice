@@ -1,0 +1,36 @@
+{
+	"name": "AzureSqlTable4",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureSqlDatabase1",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "sno",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "eid",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "ename",
+				"type": "varchar"
+			},
+			{
+				"name": "esal",
+				"type": "int",
+				"precision": 10
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "emp"
+		}
+	}
+}
